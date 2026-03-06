@@ -32,7 +32,6 @@ def portfolio_cost(filename:str)->float:
             f.close()
     return total
 
-
 if len(sys.argv) == 2:
     filename = sys.argv[1]
 else:
