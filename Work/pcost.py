@@ -9,14 +9,34 @@
 
 # Total cost 44671.15
 # Exercise 1.27
-f = open('Data/portfolio.csv','rt')
-total : float = 0
-head = next(f)
-for line in f:
-    row = line.split(',')
-    shares : int = int(row[1])
-    price  : float = float(row[2].strip())
-    total += shares * price
+import csv
+import sys
+def portfolio_cost(filename:str)->float:
+    total : float = 0.0
+    f = None # 关键：提前初始化f为None，确保变量始终被定义
+    try:
+        f = open(filename,'rt')
+        rows = csv.reader(f)
+        next(rows)
+        for row in rows:
+            try:
+                shares:int = int(row[1])
+            except ValueError:
+                print('coudld not parse', row)
+            price:float = float(row[2].strip())
+            total += shares * price
+    except FileNotFoundError:
+        print('No such file or directory: ',filename)
+    finally:
+        if f:
+            f.close()
+    return total
 
+
+if len(sys.argv) == 2:
+    filename = sys.argv[1]
+else:
+    filename = 'Data/portfolio.csv'
+
+total = portfolio_cost(filename)
 print(f'Total cost {total:0.2f}',)
-f.close()
