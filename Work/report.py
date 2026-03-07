@@ -15,34 +15,41 @@ def read_portfolio(filename)->list:
     dictionarise = []
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
-        next(rows)
+        headers = next(rows)
         for row in rows:
-            dictionary = {}
+            record = dict(zip(headers,row))
             try:
-                price:float = float(row[2])
+                # price:float = float(record['price'])
+                # shares:int = int(record['shares'])
+                # name:str = str(record['name'])
+                # dictionary['name'] = name
+                # dictionary['shares'] = shares
+                # dictionary['price'] = price
+                dictionary = {
+                    'name': record['name'],
+                    'shares': int(record['shares']),
+                    'price': float(record['price'])
+                }
+                dictionarise.append(dictionary)
             except ValueError:
                 print('coudld not parse', row)
-            shares:int = int(row[1])
-            name:str = str(row[0])
-            dictionary['name'] = name
-            dictionary['shares'] = shares
-            dictionary['price'] = price
-            dictionarise.append(dictionary)
     return dictionarise
 
 def read_prices(filename)->dict:
     dictionary = {}
+    headers=['name','price']
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         for row in rows:
             if not row:
                 continue
             try:
-                price:float = float(row[1])
+                record = dict(zip(headers,row))
+                price:float = float(record['price'])
+                name:str = str(record['name'])
+                dictionary[name] = price
             except ValueError:
                 print('coudld not parse', row)
-            name:str = str(row[0])
-            dictionary[name] = price
     return dictionary
 
 def make_report(prices:dict,portfolio:list)->list:

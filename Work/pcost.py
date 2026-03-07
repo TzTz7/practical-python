@@ -17,14 +17,15 @@ def portfolio_cost(filename:str)->float:
     try:
         f = open(filename,'rt')
         rows = csv.reader(f)
-        next(rows)
-        for row in rows:
+        headers=next(rows)
+        for index,row in enumerate(rows,start=1):
+            record = dict(zip(headers,row))
             try:
-                shares:int = int(row[1])
+                shares:int = int(record['shares'])
+                price:float = float(record['price'])
+                total += shares * price
             except ValueError:
-                print('coudld not parse', row)
-            price:float = float(row[2].strip())
-            total += shares * price
+                print('Row',index,': Couldn\'t convert:',row)
     except FileNotFoundError:
         print('No such file or directory: ',filename)
     finally:
