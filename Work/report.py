@@ -30,7 +30,7 @@ def read_portfolio(filename)->list:
             dictionarise.append(dictionary)
     return dictionarise
 
-def read_prices(filename)->list:
+def read_prices(filename)->dict:
     dictionary = {}
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
@@ -43,30 +43,26 @@ def read_prices(filename)->list:
                 print('coudld not parse', row)
             name:str = str(row[0])
             dictionary[name] = price
-
     return dictionary
 
 def make_report(prices:dict,portfolio:list)->list:
     tuples = []
     labels = ['Name','Shares','Price','Change']
-
     for dict in portfolio:
-        new_tuple = (dict['name'], int(dict['shares']), float(prices[dict['name']]), float(prices[dict['name']]-dict['price']))
+        new_tuple = (dict['name'], dict['shares'], prices[dict['name']], float(prices[dict['name']]-dict['price']))
         print(new_tuple)
         tuples.append(new_tuple)    
 
     for i in range(4):
-        print(f'{labels[i]:>12}', end=' ')
+        print(f'{labels[i]:>10}', end=' ')
     print('\n')
     for i in range(4):
         value = ''
-        print(f'{value:->12}', end=' ')
+        print(f'{value:->10}', end=' ')
     print("\n")
-    for tuple in tuples:
-        print(f'{tuple[0]:>12}', end = ' ')
-        print(f'{tuple[1]:>12}', end = ' ')
-        print(f'{tuple[2]:>12.2f}', end = ' ')
-        print(f'{tuple[3]:>12.2f}', end = '\n')
+
+    for name, shares, price, change in tuples:
+        print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
     return tuples
 
 if __name__ == '__main__':
