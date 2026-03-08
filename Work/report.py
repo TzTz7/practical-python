@@ -10,8 +10,11 @@
 # 以及对应的盈亏金额。
 # Exercise 2.4
 import csv
-
 def read_portfolio(filename)->list:
+    '''
+    Read a stock portfolio file into a list of dictionaries with keys
+    name, shares, and price.
+    '''
     dictionarise = []
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
@@ -19,12 +22,6 @@ def read_portfolio(filename)->list:
         for row in rows:
             record = dict(zip(headers,row))
             try:
-                # price:float = float(record['price'])
-                # shares:int = int(record['shares'])
-                # name:str = str(record['name'])
-                # dictionary['name'] = name
-                # dictionary['shares'] = shares
-                # dictionary['price'] = price
                 dictionary = {
                     'name': record['name'],
                     'shares': int(record['shares']),
@@ -52,34 +49,25 @@ def read_prices(filename)->dict:
                 print('coudld not parse', row)
     return dictionary
 
-def make_report(prices:dict,portfolio:list)->list:
+def make_report(portfolio:list,prices:dict)->list:
     tuples = []
-    labels = ['Name','Shares','Price','Change']
     for dict in portfolio:
-        new_tuple = (dict['name'], dict['shares'], prices[dict['name']], float(prices[dict['name']]-dict['price']))
+        new_tuple = (dict['name'], dict['shares'], 
+                     prices[dict['name']], 
+                     float(prices[dict['name']]-dict['price']))
         print(new_tuple)
         tuples.append(new_tuple)    
-
-    for i in range(4):
-        print(f'{labels[i]:>10}', end=' ')
-    print('\n')
-    for i in range(4):
-        value = ''
-        print(f'{value:->10}', end=' ')
-    print("\n")
-
-    for name, shares, price, change in tuples:
-        print(f'{name:>10s} {shares:>10d} {price:>10.2f} {change:>10.2f}')
     return tuples
+
+def print_report(data:tuple)->None:
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    print('%10s %10s %10s %10s'  % headers)
+    print(('-' * 10 + ' ') * len(headers))
+    for row in data:
+        print('%10s %10d %10.2f %10.2f' % row)
 
 if __name__ == '__main__':
     portfolio = read_portfolio('Data/portfolio.csv') #买时的支数量和价格
     prices = read_prices('Data/prices.csv') # 现在每支股票对应的价格
-    # gain:float = 0.0
-    # for dict in portfolio:
-    #     shares = dict['shares']
-    #     name = dict['name']
-    #     gain += (prices[name] - dict['price']) * dict['shares']
-
-    # print(f'gain = {gain:0.2f}')
-    make_report(prices,portfolio)
+    report = make_report(portfolio,prices)
+    print_report(report)
