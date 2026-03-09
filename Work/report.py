@@ -10,64 +10,87 @@
 # 以及对应的盈亏金额。
 # Exercise 2.4
 import csv
+from fileparse import parse_csv
 def read_portfolio(filename)->list:
     '''
     Read a stock portfolio file into a list of dictionaries with keys
     name, shares, and price.
     '''
-    dictionarise = []
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        headers = next(rows)
-        for row in rows:
-            record = dict(zip(headers,row))
-            try:
-                dictionary = {
-                    'name': record['name'],
-                    'shares': int(record['shares']),
-                    'price': float(record['price'])
-                }
-                dictionarise.append(dictionary)
-            except ValueError:
-                print('coudld not parse', row)
-    return dictionarise
+    with open(filename) as f:
+        
+        portfolio_list = parse_csv(f,
+                                select=['name','shares','price'],
+                                types=[str,int,float],
+                                has_headers=True,
+                                delimiter=',',
+                                silence_errors=False)
+        return portfolio_list
+    # dictionarise = dict(portfolio)
+    # with open(filename, 'rt') as f:
+    #     rows = csv.reader(f)
+    #     headers = next(rows)
+    #     for row in rows:
+    #         record = dict(zip(headers,row))
+    #         try:
+    #             dictionary = {
+    #                 'name': record['name'],
+    #                 'shares': int(record['shares']),
+    #                 'price': float(record['price'])
+    #             }
+    #             dictionarise.append(dictionary)
+    #         except ValueError:
+    #             print('coudld not parse', row)
+    #return dictionarise
 
-def read_prices(filename)->dict:
-    dictionary = {}
-    headers=['name','price']
-    with open(filename, 'rt') as f:
-        rows = csv.reader(f)
-        for row in rows:
-            if not row:
-                continue
-            try:
-                record = dict(zip(headers,row))
-                price:float = float(record['price'])
-                name:str = str(record['name'])
-                dictionary[name] = price
-            except ValueError:
-                print('coudld not parse', row)
-    return dictionary
+def read_prices(filename)->list:
 
-def make_report(portfolio:list,prices:dict)->list:
+    with open(filename) as f:
+
+        prices_list = parse_csv(f,
+                                types=[str,float],
+                                has_headers=False,
+                                delimiter=',',
+                                silence_errors=False)
+        return { x[0]:x[1] for x in prices_list }
+    # dictionary = {}
+    # headers=['name','price']
+    # with open(filename, 'rt') as f:
+    #     rows = csv.reader(f)
+    #     for row in rows:
+    #         if not row:
+    #             continue
+    #         try:
+    #             record = dict(zip(headers,row))
+    #             price:float = float(record['price'])
+    #             name:str = str(record['name'])
+    #             dictionary[name] = price
+    #         except ValueError:
+    #             print('coudld not parse', row)
+    # return dictionary
+
+def make_report(portfolio,prices):
     tuples = []
     for dict in portfolio:
-        new_tuple = (dict['name'], dict['shares'], 
+        new_tuple = (dict['name'], 
+                     dict['shares'], 
                      prices[dict['name']], 
                      float(prices[dict['name']]-dict['price']))
-        print(new_tuple)
         tuples.append(new_tuple)    
     return tuples
 
-def print_report(data:tuple)->None:
+def print_report(data)->None:
     headers = ('Name', 'Shares', 'Price', 'Change')
     print('%10s %10s %10s %10s'  % headers)
     print(('-' * 10 + ' ') * len(headers))
     for row in data:
         print('%10s %10d %10.2f %10.2f' % row)
 
-if __name__ == '__main__':
-    portfolio = read_portfolio('Data/portfolio.csv') #买时的支数量和价格
-    prices = read_prices('Data/prices.csv') # 现在每支股票对应的价格
+def main(argv):
+    portfolio = read_portfolio(argv[1])
+    prices = read_prices(argv[2])
     report = make_report(portfolio,prices)
     print_report(report)
+    print(prices)
+if __name__ == '__main__':
+    import sys
+    main(sys.argv)
