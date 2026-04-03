@@ -1,7 +1,8 @@
 # report.py
 
 import fileparse
-import stock
+from stock import Stock
+from portfolio import Portfolio
 import tableformat
 def read_portfolio(filename):
     '''
@@ -10,8 +11,11 @@ def read_portfolio(filename):
     !MODIFY:: Now return a list of stock(class)
     '''
     with open(filename) as lines:
-        stock_list = fileparse.parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
-    return [ stock.Stock(s['name'],s['shares'],s['price']) for s in stock_list]
+        stock_list = fileparse.parse_csv(lines,
+                                         select=['name','shares','price'],
+                                         types=[str,int,float])
+    portfolio = [Stock(s['name'],s['shares'],s['price']) for s in stock_list]
+    return Portfolio(portfolio)
 
 def read_prices(filename):
     '''
@@ -40,7 +44,7 @@ def print_report(reportdata, select, formatter):
     # formatter.headings(['Name','Shares','Price','Change'])
     formatter.headings(select)
     for name,shares,price,change in reportdata:
-        mystock = stock.Stock(name,shares,price)
+        mystock = Stock(name,shares,price)
         rowdata = [ str(getattr(mystock, s)) for s in select ] 
         # rowdata = [ name, str(shares), f'{price:0.2f}', f'{change:0.2f}' ]
         formatter.row(rowdata)
