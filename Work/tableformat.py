@@ -55,10 +55,16 @@ class HTMLTableFormatter(TableFormatter):
         print('</td></tr>')
 
 
+class FormatError(Exception):
+    pass
+
 def create_formatter(fmt):
+
     if fmt == 'txt':
         return TextTableFormatter()
     elif fmt == 'csv':
         return CSVTableFormatter()
     elif fmt == 'html':
         return HTMLTableFormatter()
+    else:
+        raise FormatError('Unknown table format %s' % fmt)
