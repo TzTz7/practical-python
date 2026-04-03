@@ -6,19 +6,30 @@ class Stock:
     def cost(self):
         return self.price*self.shares
     
-    def sell(self, num):
-        self.shares -= num
+    def sell(self, nshares):
+        self.shares -= nshares
+
+class MyStock(Stock):
+    def __init__(self,name,shares,price,factor):
+        super().__init__(name,shares,price)
+        self.factor = factor
+
+    def panic(self):
+        self.sell(self.shares)
+
+    def cost(self):
+        return self.factor * super().cost()
 
 def main():
-    print('class[stock] test')
     b = Stock('AAPL', 50, 122.34)
     a = Stock('GOOG',100,490.10)
     c = Stock('IBM', 75, 91.75)
-    s = Stock('GOOG', 100, 490.10)
+    s = MyStock('GOOG', 100, 490.10, 1.25)
     print(s.cost())
     s.sell(25)
     print(s.shares)
-    print(s.cost()) 
+    s.panic()
+    print(s.shares)
 
 if __name__ == '__main__':
     import sys
