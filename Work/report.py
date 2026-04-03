@@ -33,13 +33,16 @@ def make_report_data(portfolio,prices):
         rows.append(summary)
     return rows
 
-def print_report(reportdata, formatter):
+def print_report(reportdata, select, formatter):
     '''
     Print a nicely formated table from a list of (name, shares, price, change) tuples.
     '''
-    formatter.headings(['Name','Shares','Price','Change'])
-    for name, shares, price, change in reportdata:
-        rowdata = [ name, str(shares), f'{price:0.2f}', f'{change:0.2f}' ]
+    # formatter.headings(['Name','Shares','Price','Change'])
+    formatter.headings(select)
+    for name,shares,price,change in reportdata:
+        mystock = stock.Stock(name,shares,price)
+        rowdata = [ str(getattr(mystock, s)) for s in select ] 
+        # rowdata = [ name, str(shares), f'{price:0.2f}', f'{change:0.2f}' ]
         formatter.row(rowdata)
 
 def portfolio_report(portfoliofile, pricefile, fmt = 'txt'):        
@@ -55,7 +58,7 @@ def portfolio_report(portfoliofile, pricefile, fmt = 'txt'):
 
     # Print it out
     formatter = tableformat.create_formatter(fmt)
-    print_report(report, formatter)
+    print_report(report, ['name','shares','price'], formatter)
 
 def main(args):
     
