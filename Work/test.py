@@ -30,12 +30,20 @@ def test():
     l.sort(key=lambda s:s['name'])
     print(l)
 
-
+def add(x, y):
+    def do_add():
+        # `x` and `y` are defined above `add(x, y)`
+        print('Adding', x, y)
+        return x + y
+    return do_add
 def main():
-    import report
-    portfolio = list(report.read_portfolio('Data/portfolio.csv'))
-    portfolio.sort(key=lambda s:s.price)
-    for s in portfolio:
-        print(s)
+    # import report
+    # portfolio = list(report.read_portfolio('Data/portfolio.csv'))
+    # portfolio.sort(key=lambda s:s.price)
+    # for s in portfolio:
+    #     print(s)
+    a=add(1,32)
+    a()
+    print(a)
 if __name__ == '__main__':
     main()
