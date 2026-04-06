@@ -16,7 +16,7 @@ def follow(filename):
         yield line
     
 def main():
-    import report
+    from .report import report
 
     portfolio = report.read_portfolio('Data/portfolio.csv')
 

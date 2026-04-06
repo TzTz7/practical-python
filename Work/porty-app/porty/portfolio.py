@@ -1,6 +1,6 @@
 # portfolio.py
-import stock
-import fileparse
+from .stock import Stock
+from . import fileparse
 class Portfolio:
     def __init__(self):
         self.holdings = []
@@ -22,7 +22,7 @@ class Portfolio:
     #     return sum(ss.cost for s in self._holdings)
     
     def append(self,holding):
-        if not isinstance(holding, stock.Stock):
+        if not isinstance(holding, Stock):
             raise TypeError("expected stock")
         self.holdings.append(holding)
     
@@ -42,6 +42,6 @@ class Portfolio:
                                         **opts)
 
         for d in portdicts:
-            self.append(stock.Stock(**d))
+            self.append(Stock(**d))
 
         return self 
