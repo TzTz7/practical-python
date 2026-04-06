@@ -12,11 +12,18 @@ def filematch(filename, substr):
                 yield line
 
 def main():
+    '''
     for line in open('Data/portfolio.csv'):
         print(line, end='')
     print("-"*10)
     for line in filematch('Data/portfolio.csv','IBM'):
         print(line, end='')
+    '''
+    print(avg(1,2,21))
+    print(avg(1,213,21,21,12))
+
+def avg(x, *more):
+    return ((x+sum(more))/(1+len(more)))
 
 if __name__ == '__main__':
     main()
