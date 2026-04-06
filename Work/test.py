@@ -11,19 +11,31 @@ def filematch(filename, substr):
             if substr in line:
                 yield line
 
-def main():
-    '''
-    for line in open('Data/portfolio.csv'):
-        print(line, end='')
-    print("-"*10)
-    for line in filematch('Data/portfolio.csv','IBM'):
-        print(line, end='')
-    '''
-    print(avg(1,2,21))
-    print(avg(1,213,21,21,12))
-
 def avg(x, *more):
     return ((x+sum(more))/(1+len(more)))
+def func(s):
+    return s['name']
+def test():
+    # Check how the dictionaries are sorted by the `name` key
+    l = [
+    {'name': 'AA', 'price': 32.2, 'shares': 100},
+    {'name': 'CAT', 'price': 83.44, 'shares': 150},
+    {'name': 'GE', 'price': 40.37, 'shares': 95},
+    {'name': 'IBM', 'price': 91.1, 'shares': 50},
+    {'name': 'IBM', 'price': 70.44, 'shares': 100},
+    {'name': 'MSFT', 'price': 51.23, 'shares': 200},
+    {'name': 'MSFT', 'price': 65.1, 'shares': 50}
+    ]
 
+    l.sort(key=lambda s:s['name'])
+    print(l)
+
+
+def main():
+    import report
+    portfolio = list(report.read_portfolio('Data/portfolio.csv'))
+    portfolio.sort(key=lambda s:s.price)
+    for s in portfolio:
+        print(s)
 if __name__ == '__main__':
     main()
