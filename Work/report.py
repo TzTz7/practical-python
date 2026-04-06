@@ -10,14 +10,18 @@ def read_portfolio(filename, **opts):
     name, shares, and price.
     !MODIFY:: Now return a list of stock(class)
     '''
+    # with open(filename) as lines:
+    #     stock_list = fileparse.parse_csv(lines,
+    #                                      select=['name','shares','price'],
+    #                                      types=[str,int,float],
+    #                                      **opts)
+    # # portfolio = [Stock(s['name'],s['shares'],s['price']) for s in stock_list]
+    # portfolio = [ Stock(**s) for s in stock_list]
+    # return Portfolio(portfolio)
+
     with open(filename) as lines:
-        stock_list = fileparse.parse_csv(lines,
-                                         select=['name','shares','price'],
-                                         types=[str,int,float],
-                                         **opts)
-    # portfolio = [Stock(s['name'],s['shares'],s['price']) for s in stock_list]
-    portfolio = [ Stock(**s) for s in stock_list]
-    return Portfolio(portfolio)
+        port = Portfolio.from_csv(lines)
+    return port
 
 def read_prices(filename):
     '''
@@ -79,4 +83,10 @@ def main(args):
     '''
 if __name__ == '__main__':
     import sys
+    import logging
+    logging.basicConfig(
+        filename   = 'app.log',
+        filemode   = 'w',
+        level      = logging.DEBUG
+    )
     main(sys.argv)

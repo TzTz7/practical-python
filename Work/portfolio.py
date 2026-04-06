@@ -5,8 +5,8 @@ class Portfolio:
     def __init__(self):
         self.holdings = []
 
-    # def __iter__(self):
-    #     return self._holdings.__iter__()
+    def __iter__(self):
+        return self.holdings.__iter__()
     
     # def __len__(self):
     #     return len(self._holdings)
