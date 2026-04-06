@@ -37,12 +37,15 @@ def format_print(rows, fmt):
 def parse_dict(rows):
     for row in rows:
         yield [row['name'], str(row['price']), str(row['change'])]
+
+
 def ticker(portfile, logfile, fmt):
     import report
     
     portfile = report.read_portfolio(portfile)
     rows = parse_stock_data(follow(logfile))
-    rows = filter_symbols(rows, portfile)
+    # rows = filter_symbols(rows, portfile)
+    rows = (row for row in rows if row['name'] in portfile)
     rows = parse_dict(rows)
     format_print(rows, fmt)
 
