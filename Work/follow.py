@@ -1,5 +1,10 @@
 import os
 import time
+def filematch(lines, substr):
+    for line in lines:
+        if substr in line:
+            yield line
+
 def follow(filename):
     f = open(filename, 'r')
     f.seek(0, os.SEEK_END)
